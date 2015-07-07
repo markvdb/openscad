@@ -28,7 +28,7 @@ under_top_layer_height=under_top_plank_height;
 
 // Third layer elements
 block_length=145;
-block_height=100;
+block_height=78;
 side_block_width=100;
 side_block_length=block_length;
 side_block_height=block_height;
