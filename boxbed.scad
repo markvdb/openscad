@@ -102,6 +102,70 @@ module shelf_2d(){
 module stiffening_rib_2d(){
     square([stiffening_rib_length,stiffening_rib_width]);
 }
+
+module thick_panel_1(){
+    % square([full_panel_length,full_panel_width]);
+    translate([panel_top_width,0]) rotate([0,0,90]) panel_top();
+    translate([2*panel_top_width+ saw_width,0]) rotate([0,0,90]) panel_top();
+    translate([3*panel_top_width+ 2*saw_width,0]) rotate([0,0,90]) panel_top();
+    translate([0,panel_top_length+saw_width]) door_track();
+    translate([0,panel_top_length+2*saw_width+door_track_width]) door_track();
+    translate([door_track_length+saw_width,panel_top_length+saw_width]) door_track();
+    translate([door_track_length+saw_width,panel_top_length+2*saw_width+door_track_width]) door_track();
+}
+
+module thick_panel_2(){
+    % translate([full_panel_length+20,0]){
+        square([full_panel_length,full_panel_width]);
+        panel_top();
+        translate([0,panel_top_width+saw_width]) panel_side_thick();
+        translate([panel_top_length+saw_width,0]){
+            panel_side_thick();
+            translate([0,panel_side_thick_width+saw_width]) panel_side_thick();
+            translate([0,2*(panel_side_thick_width+saw_width)]) panel_side_thick();
+        }
+    }    
+}
+
+module thin_panel_1(){
+    translate([0,full_panel_width+20]){
+    // first thin panel
+    % square([full_panel_length,full_panel_width]);
+    shelf();
+    translate([shelf_length+saw_width,0])
+        shelf();
+    translate([0,shelf_width+saw_width])
+        stiffening_rib();
+    translate([shelf_length+saw_width,shelf_width+saw_width])
+        stiffening_rib();
+    translate([0,shelf_width+stiffening_rib_width+2*saw_width])
+        stiffening_rib();
+    translate([shelf_length+saw_width,shelf_width+stiffening_rib_width+2*saw_width])
+        stiffening_rib();
+    translate([2*(shelf_length+saw_width)+shelf_width,0])
+        rotate([0,0,90])
+            shelf();
+    }
+}
+module thin_panel_2(){
+    translate([full_panel_length+20,full_panel_width+20]){
+        % square([full_panel_length,full_panel_width]);
+        translate([shelf_width,0])
+            rotate([0,0,90])
+                shelf();
+        translate([shelf_width+saw_width+panel_side_thin_width,0])
+            rotate([0,0,90])
+                panel_side_thin();
+        translate([shelf_width+2*(saw_width+panel_side_thin_width),0])
+            rotate([0,0,90])
+                panel_side_thin();
+        translate([shelf_width+3*(saw_width+panel_side_thin_width),0])
+            rotate([0,0,90])
+                panel_side_thin();
+        translate([shelf_width+saw_width,panel_side_thin_length+saw_width])
+                panel_side_thin();
+    }
+}
 // Box parts 3D
 module door_left(){
     % linear_extrude(door_height) door_left_2d();
@@ -135,6 +199,11 @@ module panel_side_thick(){
 }
 module panel_side_thin(){
     linear_extrude(panel_side_thin_height) panel_side_thin_2d();
+    text=str("panel side thin:",panel_side_thin_length,"mm* ",panel_side_thin_width,"mm *",panel_side_thin_height,"mm");
+    translate([panel_side_thin_length/2, panel_side_thin_width/2, panel_side_thin_height])
+        color("blue") {
+            text(halign="center", valign="center", text=text, size=20);
+   }
 }
 module panel_top(){
     difference(){
@@ -152,9 +221,19 @@ module panel_top(){
 }
 module shelf(){
     linear_extrude(shelf_height) shelf_2d();
+    text=str("shelf:",shelf_length,"mm* ",shelf_width,"mm *",shelf_height,"mm");
+    translate([shelf_length/2, shelf_width/2, shelf_height])
+        color("blue") {
+            text(halign="center", valign="center", text=text, size=20);
+   }
 }
 module stiffening_rib(){
     linear_extrude(stiffening_rib_height) stiffening_rib_2d();
+    text=str("stiffening rib:",stiffening_rib_length,"mm* ",stiffening_rib_width,"mm *",stiffening_rib_height,"mm");
+    translate([stiffening_rib_length/2, stiffening_rib_width/2, stiffening_rib_height])
+        color("blue") {
+            text(halign="center", valign="center", text=text, size=20);
+   }
 }
 
 // One box 3D
@@ -198,32 +277,21 @@ module boxes(){
 
 /*----------------------------------------
 Build it!
+Set 3d=1 for 3d view, or 3d=0 for 2d view.
 ----------------------------------------*/
 3d=1;
+
 if (3d){
+    // 3D view
     boxes();
     translate([mattress_length,0,box_outer_height])
         rotate([0,0,90])
             mattress();    
 } else {
-    // first thick panel
-    % square([full_panel_length,full_panel_width]);
-    translate([panel_top_width,0]) rotate([0,0,90]) panel_top();
-    translate([2*panel_top_width+ saw_width,0]) rotate([0,0,90]) panel_top();
-    translate([3*panel_top_width+ 2*saw_width,0]) rotate([0,0,90]) panel_top();
-    translate([0,panel_top_length+saw_width]) door_track();
-    translate([0,panel_top_length+2*saw_width+door_track_width]) door_track();
-    translate([door_track_length+saw_width,panel_top_length+saw_width]) door_track();
-    translate([door_track_length+saw_width,panel_top_length+2*saw_width+door_track_width]) door_track();        
-
-    % translate([full_panel_length+20,0]){
-        square([full_panel_length,full_panel_width]);
-        panel_top();
-            translate([0,panel_top_width+saw_width]) panel_side_thick();
-            translate([panel_top_length+saw_width,0]){
-                panel_side_thick();
-                translate([0,panel_side_thick_width+saw_width]) panel_side_thick();
-                translate([0,2*(panel_side_thick_width+saw_width)]) panel_side_thick();
-            }
-    }   
+    // 2D view
+    thick_panel_1();
+    thick_panel_2();
+    
+    thin_panel_1();
+    thin_panel_2();
 }
