@@ -1,4 +1,5 @@
 // Bed box, inspired by http://www.instructables.com/id/Box-Bed/?ALLSTEPS
+// by Wholman of http://www.objectguerilla.com/
 // (but metric units, not medieval)
 
 // Global variables
