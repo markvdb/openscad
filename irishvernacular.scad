@@ -65,6 +65,21 @@ module cross_piece(){
     cube([wood_width, cross_piece_length, cross_piece_height]);
 }
 
+module floor_joist(){
+    cube([floor_joist_length,wood_width,wood_height]);
+}
+
+module floor_joist_perimeter(){
+    cube([floor_joist_perimeter_length,wood_width,wood_height]);
+}
+
+module wall_plate(){
+    cube([wall_plate_length,wall_plate_height,wall_plate_width]);
+}
+
+/*-----------------------------------------------------------------
+Assemblies of individual parts
+------------------------------------------------------------------*/
 module column(){
     column_center();
     color("red") translate([-wood_width,0,0]) column_base();
@@ -75,17 +90,6 @@ module column(){
     color("red") translate([wood_width,0,column_base_length+cross_piece_height]) column_middle();
 }
 
-module floor_joist(){
-    cube([floor_joist_length,wood_width,wood_height]);
-}
-
-module floor_joist_perimeter(){
-    cube([floor_joist_perimeter_length,wood_width,wood_height]);
-}
-
-/*-----------------------------------------------------------------
-Assemblies of individual parts
-------------------------------------------------------------------*/
 module frame(){
         translate([0,column_height,0]) mirror([0,1,0]) column();
         translate([-wood_width,0,column_base_length]) cross_piece();
@@ -126,6 +130,16 @@ module floor_joists_perimeter(){
         color("blue") translate([wood_width/2+frames_core_distance*i,cross_piece_length,column_base_length])floor_joist_perimeter();
     }
 }
+
+module wall_plates(){
+    for (i=[0:3]){
+        for (j=[0:1]){
+            color("orange") translate([wood_width/2+frames_core_distance*i,j*(cross_piece_length-wood_height),column_center_length]) wall_plate();
+        }
+    }
+}
+
 frames();
 floor_joists();
 floor_joists_perimeter();
+wall_plates();
