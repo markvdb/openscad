@@ -49,6 +49,10 @@ roof_joist_length=2837;
 roof_joist_width=wood_width;
 roof_joist_height=wood_height;
 
+roof_rim_plate_length=12132;
+roof_rim_plate_width=wood_width;
+roof_rim_plate_height=wood_height;
+
 wall_plate_length=frames_core_distance;
 wall_plate_width=wood_width;
 wall_plate_height=wood_height;
@@ -113,6 +117,10 @@ module roof_joist_left(){
 
 module roof_joist_right(){
     mirror([1,0,0]) roof_joist_left();
+}
+
+module roof_rim_plate(){
+    cube([roof_rim_plate_length, roof_rim_plate_width, roof_rim_plate_height]);
 }
 
 module wall_plate(){
@@ -188,12 +196,13 @@ module noggings_long_side(){
 }
 
 module roof_joists(){
-    for(i=[0:21]){
+    for(i=[0:20]){
         translate([i*600+wood_width,-50,column_center_length+wall_plate_width]) rotate([0,0,90]){
         roof_joist_left();
         translate([4050,0,0]) roof_joist_right();
         }
     }
+    translate([-wood,(cross_piece_length-wood_width)/2,column_center_length+wall_plate_width-roof_rim_plate_height+2000]) roof_rim_plate();
 }
 
 module wall_plates(){
