@@ -46,6 +46,8 @@ wall_strut_side_length=3321;
 wall_strut_width=wood_width;
 wall_strut_height=wood_height;
 
+wall_strut_short_length=2470;
+
 /*-----------------------------------------------------------------
 Individual parts
 ------------------------------------------------------------------*/
@@ -83,6 +85,10 @@ module wall_plate(){
 
 module wall_strut_side(){
     cube([wall_strut_width,wall_strut_height,wall_strut_side_length]);
+}
+
+module wall_strut_short(){
+    cube([wall_strut_height,wall_strut_width,wall_strut_short_length]);
 }
 
 /*-----------------------------------------------------------------
@@ -157,8 +163,19 @@ module wall_struts_side(){
     }
 }
 
+module wall_struts_short(){
+    for (i=[0:1]){
+        translate([frames_core_distance*4*i,0,0]){
+            for (i=[-2:2]){
+                translate([-2*wood_width,cross_piece_length/2+600*i-wood_width/2,column_base_length+cross_piece_height]) wall_strut_short();
+            }
+        }
+    }
+}
+
 frames();
 floor_joists();
 floor_joists_perimeter();
 wall_plates();
 wall_struts_side();
+wall_struts_short();
