@@ -42,6 +42,10 @@ wall_plate_length=frames_core_distance;
 wall_plate_width=wood_width;
 wall_plate_height=wood_height;
 
+wall_strut_side_length=3321;
+wall_strut_width=wood_width;
+wall_strut_height=wood_height;
+
 /*-----------------------------------------------------------------
 Individual parts
 ------------------------------------------------------------------*/
@@ -75,6 +79,10 @@ module floor_joist_perimeter(){
 
 module wall_plate(){
     cube([wall_plate_length,wall_plate_height,wall_plate_width]);
+}
+
+module wall_strut_side(){
+    cube([wall_strut_width,wall_strut_height,wall_strut_side_length]);
 }
 
 /*-----------------------------------------------------------------
@@ -115,8 +123,8 @@ module floor_joists(){
     }
     for (i=[0:1]){
         //inner perimeter mezzanine floor joists
-        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,column_height-wood_width,column_center_length-column_top_length-wood_height]) floor_joist();
-        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length-column_height,column_center_length-column_top_length-wood_height]) floor_joist();
+        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,column_height,column_center_length-column_top_length-wood_height]) floor_joist();
+        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length-column_height-wood_width,column_center_length-column_top_length-wood_height]) floor_joist();
         //60 cm spaced mezzanine floor joists
         for (j=[-2:2]){
             color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length/2+j*600,column_center_length-column_top_length-wood_height]) floor_joist();
@@ -134,7 +142,17 @@ module floor_joists_perimeter(){
 module wall_plates(){
     for (i=[0:3]){
         for (j=[0:1]){
-            color("orange") translate([wood_width/2+frames_core_distance*i,j*(cross_piece_length-wood_height),column_center_length]) wall_plate();
+            color("orange") translate([wood_width/2+frames_core_distance*i,j*(cross_piece_length-wood_height+2*wood_width)-wood_width,column_center_length]) wall_plate();
+        }
+    }
+}
+
+module wall_struts_side(){
+    color("green") for (i=[0:1]){
+        translate([0,(cross_piece_length-3*wood_width)*i,0]) for (j=[0:3]){
+            translate([frames_core_distance*j,0,0]){
+                for (k=[1:4]) translate([frames_core_distance*k/5,-wood_width,column_base_length+cross_piece_height]) wall_strut_side();
+            }
         }
     }
 }
@@ -143,3 +161,4 @@ frames();
 floor_joists();
 floor_joists_perimeter();
 wall_plates();
+wall_struts_side();
