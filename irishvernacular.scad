@@ -42,6 +42,9 @@ wall_plate_length=frames_core_distance;
 wall_plate_width=wood_width;
 wall_plate_height=wood_height;
 
+/*-----------------------------------------------------------------
+Individual parts
+------------------------------------------------------------------*/
 module column_base(){
     cube([wood_width, column_base_height, column_base_length]);
 }
@@ -80,6 +83,9 @@ module floor_joist_perimeter(){
     cube([floor_joist_perimeter_length,wood_width,wood_height]);
 }
 
+/*-----------------------------------------------------------------
+Assemblies of individual parts
+------------------------------------------------------------------*/
 module frame(){
         translate([0,column_height,0]) mirror([0,1,0]) column();
         translate([-wood_width,0,column_base_length]) cross_piece();
@@ -93,6 +99,13 @@ module frames(){
     for (i=[0:4]) translate([frames_core_distance*i,0,0]) frame();
 }
 
+module floor_joists(){
+    for (i=[0:3]){
+        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,column_height-wood_width,column_base_length]) floor_joist();
+        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length-column_height,column_base_length]) floor_joist();
+    }
+}
+
 module floor_joists_perimeter(){
     for (i=[0:3]){
         color("blue") translate([wood_width/2+frames_core_distance*i,-wood_width,column_base_length])floor_joist_perimeter();
@@ -100,4 +113,5 @@ module floor_joists_perimeter(){
     }
 }
 frames();
+floor_joists();
 floor_joists_perimeter();
