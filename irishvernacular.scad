@@ -41,7 +41,11 @@ frames_core_distance=3000;
 
 floor_joist_perimeter_length=frames_core_distance;
 
-roof_joist_length=2850;
+nogging_length=556;
+nogging_width=wood_width;
+nogging_height=wood_height;
+
+roof_joist_length=2837;
 roof_joist_width=wood_width;
 roof_joist_height=wood_height;
 
@@ -90,6 +94,27 @@ module floor_joist_perimeter(){
     cube([floor_joist_perimeter_length,wood_width,wood_height]);
 }
 
+module nogging(){
+    cube([nogging_length, nogging_height, nogging_width]);
+}
+
+module roof_joist_left(){
+    render(convexity = 2)
+    difference(){
+        rotate([0,45,0]){
+            difference(){
+                cube([roof_joist_height, roof_joist_width, roof_joist_length]);
+                translate([0,0,roof_joist_length]) rotate([0,45,0]) cube([2*wood_height, wood_width, wood_height]);
+            }
+        }
+        translate([0,0,-wood_height]) cube([wood_height,wood_width,wood_height]);
+    }
+}
+
+module roof_joist_right(){
+    mirror([1,0,0]) roof_joist_left();
+}
+
 module wall_plate(){
     cube([wall_plate_length,wall_plate_height,wall_plate_width]);
 }
@@ -101,6 +126,7 @@ module wall_strut_side(){
 module wall_strut_short(){
     cube([wall_strut_height,wall_strut_width,wall_strut_short_length]);
 }
+
 
 /*-----------------------------------------------------------------
 Assemblies of individual parts
@@ -157,6 +183,19 @@ module floor_joists_perimeter(){
     }
 }
 
+module noggings_long_side(){
+    nogging();
+}
+
+module roof_joists(){
+    for(i=[0:21]){
+        translate([i*600+wood_width,-50,column_center_length+wall_plate_width]) rotate([0,0,90]){
+        roof_joist_left();
+        translate([4050,0,0]) roof_joist_right();
+        }
+    }
+}
+
 module wall_plates(){
     for (i=[0:3]){
         for (j=[0:1]){
@@ -176,10 +215,10 @@ module wall_struts_side(){
 }
 
 module wall_struts_short(){
-    for (i=[0:1]){
+    color("orange") for (i=[0:1]){
         translate([frames_core_distance*4*i,0,0]){
             for (i=[-2:2]){
-                translate([-wood_width,cross_piece_length/2+600*i,column_base_length+cross_piece_height]) wall_strut_short();
+                translate([-2*wood_width,cross_piece_length/2+600*i,column_base_length+cross_piece_height]) wall_strut_short();
             }
         }
     }
@@ -191,3 +230,5 @@ floor_joists_perimeter();
 wall_plates();
 wall_struts_side();
 wall_struts_short();
+noggings_long_side();
+roof_joists();
