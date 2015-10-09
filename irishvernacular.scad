@@ -6,6 +6,9 @@ wood_width=44;
 wood_height=225;
 column_height=175;
 
+batten_width=44;
+batten_height=44;
+
 //specific frame parts
 column_base_length=300;
 column_base_width=wood_width;
@@ -14,6 +17,10 @@ column_base_height=wood_height;
 column_center_length=3846;
 column_center_width=wood_width;
 column_center_height=column_height;
+
+column_center_batten_length=3321;
+column_center_batten_width=batten_width;
+column_center_batten_height=batten_height;
 
 column_middle_length=2470;
 column_middle_width=wood_width;
@@ -59,6 +66,10 @@ module column_center(){
     cube([wood_width, column_center_height, column_center_length]);
 }
 
+module column_center_batten(){
+    cube([column_center_batten_width, column_center_batten_height, column_center_batten_length]);
+}
+
 module column_middle(){
     cube([wood_width, column_middle_height, column_middle_length]);
 }
@@ -96,6 +107,7 @@ Assemblies of individual parts
 ------------------------------------------------------------------*/
 module column(){
     column_center();
+    color("green") translate([0,column_center_height,column_base_length+cross_piece_height]) column_center_batten();
     color("red") translate([-wood_width,0,0]) column_base();
     color("red") translate([-wood_width,0,column_center_length-column_top_length]) column_top();
     color("red") translate([-wood_width,0,column_base_length+cross_piece_height]) column_middle();
@@ -167,7 +179,7 @@ module wall_struts_short(){
     for (i=[0:1]){
         translate([frames_core_distance*4*i,0,0]){
             for (i=[-2:2]){
-                translate([-2*wood_width,cross_piece_length/2+600*i-wood_width/2,column_base_length+cross_piece_height]) wall_strut_short();
+                translate([-wood_width,cross_piece_length/2+600*i,column_base_length+cross_piece_height]) wall_strut_short();
             }
         }
     }
