@@ -101,7 +101,7 @@ module frames(){
 
 module floor_joists(){
     for (i=[0:3]){
-        //inner perimeter floor joists
+        //inner perimeter ground floor joists
         color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,column_height-wood_width,column_base_length]) floor_joist();
         color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length-column_height,column_base_length]) floor_joist();
         //60 cm spaced ground floor joists
@@ -109,9 +109,14 @@ module floor_joists(){
             color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length/2+j*600,column_base_length]) floor_joist();
         }
     }
-    //60 cm spaced floor joists
-    for (j=[-2:2]){
-        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2,cross_piece_length/2+j*600,column_base_length]) floor_joist();
+    for (i=[0:1]){
+        //inner perimeter mezzanine floor joists
+        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,column_height-wood_width,column_center_length-column_top_length-wood_height]) floor_joist();
+        color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length-column_height,column_center_length-column_top_length-wood_height]) floor_joist();
+        //60 cm spaced mezzanine floor joists
+        for (j=[-2:2]){
+            color("blue") translate([wood_width/2+(frames_core_distance-floor_joist_length)/2+frames_core_distance*i,cross_piece_length/2+j*600,column_center_length-column_top_length-wood_height]) floor_joist();
+        }
     }
 }
 
