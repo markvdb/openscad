@@ -1,6 +1,8 @@
 /*Attempt at rendering of the 25000€ DIY timber frame house plans by Dominic Stevens at http://irishvernacular.com
 */
 
+include </home/mark/git/openscad/ISOThread.scad>
+
 //common size of most of the wood used
 wood_width=44;
 wood_height=225;
@@ -139,6 +141,15 @@ module wall_strut_short(){
 /*-----------------------------------------------------------------
 Assemblies of individual parts
 ------------------------------------------------------------------*/
+module column_threaded_rod(){
+    translate([-wood_width-(200-3*wood_width)/2,column_center_height/2,0]) rotate([0,90,0]){
+        //thread_out(12,200);
+        thread_out_centre(12,200);
+        translate([0,0,(200-3*wood_width)/2+3*wood_width]) hex_nut(12);
+        translate([0,0,(200-3*wood_width)/2-rolson_hex_nut_hi(12)]) hex_nut(12);
+    }
+}
+
 module column(){
     column_center();
     color("green") translate([0,column_center_height,column_base_length+cross_piece_height]) column_center_batten();
@@ -148,6 +159,13 @@ module column(){
     color("red") translate([wood_width,0,0]) column_base();
     color("red") translate([wood_width,0,column_center_length-column_top_length]) column_top();
     color("red") translate([wood_width,0,column_base_length+cross_piece_height]) column_middle();
+    translate([0,0,column_base_length/3]) column_threaded_rod();
+    translate([0,0,column_base_length*2/3]) column_threaded_rod();
+    translate([0,0,column_base_length+cross_piece_height+column_middle_length/10]) column_threaded_rod();
+    translate([0,0,column_base_length+cross_piece_height+column_middle_length/2]) column_threaded_rod();
+    translate([0,0,column_base_length+cross_piece_height+column_middle_length*9/10]) column_threaded_rod();
+    translate([0,0,column_base_length+2*cross_piece_height+column_middle_length+column_top_length/4]) column_threaded_rod();
+    translate([0,0,column_base_length+2*cross_piece_height+column_middle_length+column_top_length*3/4]) column_threaded_rod();
 }
 
 module frame(){
@@ -202,7 +220,7 @@ module roof_joists(){
         translate([4050,0,0]) roof_joist_right();
         }
     }
-    translate([-wood,(cross_piece_length-wood_width)/2,column_center_length+wall_plate_width-roof_rim_plate_height+2000]) roof_rim_plate();
+    translate([-wood_width,(cross_piece_length-wood_width)/2,column_center_length+wall_plate_width-roof_rim_plate_height+2000]) roof_rim_plate();
 }
 
 module wall_plates(){
@@ -241,3 +259,4 @@ wall_struts_side();
 wall_struts_short();
 noggings_long_side();
 roof_joists();
+
